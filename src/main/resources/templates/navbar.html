@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+  <!-- 
+    Fragment della Navbar "Dark Luxury".
+    - MODIFICATO: Ora il credito viene calcolato dinamicamente dal service,
+      riflettendo le offerte attive.
+  -->
+  <nav th:fragment="navbar" class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" th:href="@{/}">SNKRS_BID</a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+		
+          <!-- Menu a tendina per l'Admin -->
+          <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
+            <a class="nav-link dropdown-toggle nav-link-admin" href="#" id="navbarAdminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Area Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarAdminDropdown">
+                <li><a class="dropdown-item" th:href="@{/admin/addProduct}">Aggiungi Asta</a></li>
+                <li><a class="dropdown-item" th:href="@{/admin/manageProducts}">Gestisci Aste</a></li>
+				<li><a class="dropdown-item" th:href="@{/admin/manageUsers}">Gestisci Utenti</a></li>
+            </ul>
+          </li>
+          
+          <!-- Link principali -->
+          <li class="nav-item"><a class="nav-link" th:href="@{/products}">Aste</a></li>
+          
+          <!-- Sezione Utente Anonimo -->
+          <li class="nav-item" sec:authorize="isAnonymous()">
+            <a class="nav-link nav-link-featured" th:href="@{/login}">Login</a>
+          </li>
+          <li class="nav-item" sec:authorize="isAnonymous()">
+             <a th:href="@{/register}" class="btn btn-gold">Registrati</a>
+          </li>
+
+          <!-- Sezione Utente Autenticato -->
+
+          <!-- MODIFICA: Visualizzazione Credito DINAMICO -->
+          <li class="nav-item" sec:authorize="hasRole('DEFAULT')">
+            <!-- 1. Thymeleaf chiama il nuovo metodo del service per ottenere il credito spendibile -->
+            <div th:with="spendableCredit=${@userService.getSpendableCreditForCurrentUser()}">
+                <!-- 2. Mostriamo il credito calcolato -->
+                <div th:if="${spendableCredit != null}" class="navbar-credit">
+                    <i class="bi bi-wallet2"></i>
+                    <span th:text="'€ ' + ${#numbers.formatDecimal(spendableCredit, 1, 'COMMA', 2, 'POINT')}">€ 0,00 </span>
+					<button class="btn-add-funds" onclick="showUnavailableToast()" title="Aggiungi fondi">
+					                                        <i class="bi bi-plus-circle-fill"></i>
+					                                    </button>
+					
+                </div>
+            </div>
+          </li>
+
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/profile}">Profilo</a>
+          </li>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/logout}">Logout</a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+</body>
+</html>
+

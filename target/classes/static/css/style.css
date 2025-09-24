@@ -1,0 +1,1083 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Playfair+Display:wght@700&display=swap');
+
+/* =================================================================== */
+/* --- 1. VARIABILI GLOBALI E IMPOSTAZIONI DI BASE --- */
+/* =================================================================== */
+
+:root {
+    /* Palette Colori */
+    --bg-deep-black: #0D0D0D;
+    --bg-anthracite: #1A1A1A;
+    --accent-gold: #C9A227;
+    --accent-gold-hover: #e0b83b;
+    --text-light: #F5F5F5;
+    --text-muted: rgba(245, 245, 245, 0.75); /* Opacità aumentata per leggibilità */
+    --danger-red: #dc3545;
+
+    /* Colori UI Derivati */
+    --border-color: rgba(201, 162, 39, 0.2);
+    --border-color-strong: rgba(201, 162, 39, 0.3);
+    --shadow-color-light: rgba(201, 162, 39, 0.4);
+    --shadow-color-strong: rgba(0, 0, 0, 0.5);
+    --bg-anthracite-translucent: rgba(26, 26, 26, 0.5);
+
+    /* Tipografia */
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Poppins', sans-serif;
+
+    /* Dimensioni e Spaziature */
+    --navbar-height: 84px;
+    --border-radius-main: 12px;
+    --border-radius-small: 8px;
+    --border-radius-round: 50px;
+}
+
+/* --- Stile Globale & Scrollbar --- */
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-deep-black);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep-black); }
+::-webkit-scrollbar-thumb {
+    background-color: var(--accent-gold);
+    border-radius: 10px;
+    border: 2px solid var(--bg-deep-black);
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--accent-gold-hover); }
+
+/* --- Tipografia Globale --- */
+h1, h2, h3, h4, h5 {
+    font-family: var(--font-serif);
+    color: var(--text-light);
+}
+
+h1 .accent-text, h2 .accent-text { color: var(--accent-gold); }
+
+.page-title { font-size: 3.5rem; }
+
+a {
+    color: var(--accent-gold);
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+a:hover {
+    color: #FFFFFF;
+    text-shadow: 0 0 8px var(--shadow-color-light);
+}
+
+
+/* =================================================================== */
+/* --- 2. COMPONENTI RIUTILIZZABILI --- */
+/* =================================================================== */
+
+/* --- Navbar --- */
+.navbar {
+    background-color: var(--bg-deep-black);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    height: var(--navbar-height);
+}
+.navbar-brand {
+    font-family: var(--font-sans);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-light) !important;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.navbar-brand:hover { color: var(--accent-gold) !important; }
+.navbar-nav { gap: 0.5rem; align-items: center; }
+.navbar .nav-link {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-light) !important;
+    border-radius: var(--border-radius-round);
+    transition: all 0.3s ease;
+}
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: var(--accent-gold) !important;
+    text-shadow: 0 0 5px rgba(201, 162, 39, 0.5);
+}
+.nav-link-admin {
+    color: var(--accent-gold) !important;
+    font-weight: bold;
+}
+.navbar .nav-link.nav-link-admin {
+    color: var(--accent-gold) !important;
+    font-weight: bold;
+}
+.dropdown-menu {
+    background-color: var(--bg-deep-black);
+    border: 1px solid var(--border-color-strong);
+}
+.dropdown-item { color: var(--text-light); }
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--accent-gold);
+    color: var(--bg-deep-black);
+}
+.navbar-toggler { border-color: rgba(201, 162, 39, 0.5); }
+.navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%path stroke='rgba(201, 162, 39, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); }
+.navbar-credit-link {
+    text-decoration: none;
+    border-radius: var(--border-radius-round);
+    transition: background-color 0.3s ease;
+}
+.navbar-credit-link:hover { background-color: rgba(201, 162, 39, 0.1); }
+.navbar-credit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    color: var(--text-light);
+}
+.navbar-credit .bi-wallet2 { color: var(--accent-gold); }
+
+/* --- Pulsanti --- */
+.btn-gold, .btn-gold-outline {
+    border-radius: var(--border-radius-round);
+    padding: 0.8rem 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    font-family: var(--font-sans);
+    border: 1px solid var(--accent-gold);
+}
+.btn-gold {
+    background-color: var(--accent-gold);
+    color: var(--bg-deep-black) !important; /* !important per sovrascrivere Bootstrap */
+}
+.btn-gold:hover {
+    background-color: transparent;
+    color: var(--accent-gold) !important;
+    box-shadow: 0 0 15px var(--shadow-color-light);
+}
+.btn-gold-outline {
+    background-color: transparent;
+    color: var(--accent-gold) !important;
+}
+.btn-gold-outline:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-deep-black) !important;
+    box-shadow: 0 0 10px var(--shadow-color-light);
+}
+/* Stili specifici per pulsanti più piccoli, es. nella navbar o form */
+.navbar .btn-gold,
+.bid-form .btn-gold,
+.btn-gold-outline.btn-sm { /* Aggiunta classe per coerenza */
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+}
+
+/* --- Card Prodotto --- */
+.product-card-link {
+    text-decoration: none;
+    color: var(--text-light);
+    display: block;
+    height: 100%;
+}
+.product-card-link:hover { color: var(--text-light); }
+.product-card {
+    background-color: var(--bg-anthracite);
+    border: 1px solid var(--border-color-strong);
+    border-radius: var(--border-radius-small);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+}
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px var(--shadow-color-strong);
+    border-color: var(--accent-gold);
+}
+.product-image-container {
+    width: 100%;
+    padding-top: 70.43%; /* Aspect ratio per l'immagine */
+    position: relative;
+	background-color: white;
+	object-fit: contain;
+}
+.product-card .card-img-top {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.product-card .card-body { padding: 1.5rem; }
+.product-card .card-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.auction-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1rem;
+}
+.auction-details small {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+.auction-price span { font-size: 1.4rem; font-weight: 700; color: var(--accent-gold); }
+.auction-timer { text-align: right; }
+.auction-timer span { font-size: 1.1rem; font-weight: 500; }
+
+/* Nel file: src/main/resources/static/css/style.css */
+
+/* Stile per la card di un'asta terminata */
+.product-card.auction-ended {
+    opacity: 0.6; /* Rende la card semi-trasparente */
+    position: relative; /* Necessario per posizionare l'overlay */
+}
+
+/* Stile per l'overlay con la scritta "Asta Terminata" */
+.auction-ended-overlay {
+    position: absolute; /* Si sovrappone al contenuto della card */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(13, 13, 13, 0.7); /* Sfondo scuro semi-trasparente */
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem; /* Dimensione del testo */
+    font-weight: bold;
+    z-index: 10; /* Assicura che sia sopra l'immagine e il testo */
+    border-radius: inherit; /* Mantiene gli angoli arrotondati della card */
+	pointer-events: none;
+}
+
+
+/* =================================================================== */
+/* --- 3. STILI SPECIFICI PER PAGINE --- */
+/* =================================================================== */
+
+/* --- Stili Homepage (Hero & Search) --- */
+.hero-body {
+    height: calc(100vh - var(--navbar-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+.hero-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+#bg-video {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.3;
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+}
+.hero-content h1 { font-size: 4.5rem; }
+.home-footer-overlay {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 0; right: 0;
+    z-index: 2;
+    text-align: center;
+}
+.home-footer-overlay p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+.combined-search-form {
+    max-width: 700px;
+    margin: 3rem auto;
+    display: flex;
+    border: 1px solid var(--accent-gold);
+    border-radius: var(--border-radius-round);
+    background-color: var(--bg-anthracite-translucent);
+    overflow: hidden;
+}
+.search-input, .search-select {
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    padding: 0.9rem 1.5rem;
+    font-size: 1.1rem;
+}
+.search-input:focus, .search-select:focus {
+    background: transparent !important;
+    color: var(--text-light) !important;
+    outline: none;
+    box-shadow: none;
+}
+.search-input { flex-grow: 1; }
+.search-select {
+    appearance: none; -webkit-appearance: none;
+    cursor: pointer;
+    border-left: 1px solid var(--border-color-strong);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23C9A227' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    /* MODIFICA 2: Rimpicciolita la larghezza */
+    width: 180px;
+    flex-shrink: 0; /* Impedisce al select di cambiare dimensione */
+}
+.search-select option { background-color: var(--bg-deep-black); }
+.search-button {
+    background-color: var(--accent-gold);
+    color: var(--bg-deep-black);
+    border: none;
+    padding: 0 1.8rem;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+}
+.search-button:hover { background-color: var(--accent-gold-hover); }
+
+/* --- Pagina Dettaglio Prodotto --- */
+.single-view-container {
+    height: calc(100vh - var(--navbar-height));
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* Impedisce lo scroll della pagina intera su schermi grandi */
+}
+.single-view-container > .row {
+    height: 100%;
+    align-items: stretch;
+}
+
+
+/* Colonna 1: Immagine e Descrizione */
+.product-column .main-image {
+    width: 100%;
+	height: 300px;
+    object-fit: contain;
+    border-radius: var(--border-radius-main);
+    background-color: var(--bg-anthracite);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 2rem;
+	background-color: white;
+}
+.product-column .scrollable-content { overflow-y: auto; } /* Abilita scroll se la descrizione è lunga */
+.product-title-main { font-size: 2rem; line-height: 1.2; margin-bottom: 0.5rem; }
+.product-description-main { font-size: 0.9rem; color: var(--text-muted); }
+
+/* Colonna 2: Pannello Asta */
+.auction-panel-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: 1rem 2rem;
+}
+.auction-panel-main small {
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    font-size: 0.8rem;
+}
+.timer-display { font-size: 1.1rem; font-weight: 500; margin: 0.25rem 0 1.5rem; }
+.current-bid-amount {
+    font-size: 4rem;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    color: var(--accent-gold);
+    line-height: 1;
+    text-shadow: 0 0 25px var(--shadow-color-light);
+    margin-bottom: 2rem;
+	white-space: nowrap;
+}
+.bid-form .input-group {
+    border-radius: var(--border-radius-round);
+    border: 1px solid rgba(255,255,255,0.2);
+    overflow: hidden;
+    background-color: var(--bg-anthracite);
+}
+.bid-form .input-group:focus-within {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.3);
+}
+.bid-form .input-group-text, .bid-form .form-control {
+    background-color: transparent;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+.bid-form .form-control:focus { box-shadow: none; }
+
+/* Stile per quando l'offerta dell'utente è la più alta */
+.current-bid-amount.winning-bid {
+    color: #28a745; /* Un verde che indica successo */
+    text-shadow: 0 0 20px rgba(40, 167, 69, 0.6); /* Ombra coordinata */
+}
+
+.winning-bid-text {
+  color: #28a745 !important; /* Un verde brillante per indicare successo */
+  font-weight: bold; /* Rende il testo più visibile */
+}
+
+/* Stile per il messaggio di testo sotto l'offerta */
+.winning-indicator small {
+    color: #28a745 !important;  /* Colore verde brillante */
+    font-weight: 500;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Colonna 3: Attività (Grafico e Messaggi) */
+.activity-column {
+    height: 100%;
+}
+.activity-title {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    flex-shrink: 0; /* Impedisce al titolo di restringersi */
+}
+.chart-box { flex-shrink: 0; }
+.bid-chart-container { position: relative; width: 100%; height: 160px; }
+.empty-state {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+.messages-box {
+    flex-grow: 1;
+    min-height: 0;
+}
+.messages-list-main {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 0.5rem;
+}
+.message-form-container {
+    flex-shrink: 0;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+.chat-message {
+    font-size: 0.9rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.chat-message:last-child { border-bottom: none; }
+.chat-message .message-author { color: var(--accent-gold); font-weight: 500; }
+.chat-message .message-text { margin: 0.25rem 0 0; line-height: 1.5; opacity: 0.8; }
+.message-form-container .form-control {
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.9rem;
+    border-radius: var(--border-radius-round) !important;
+}
+.message-form-container .form-control::placeholder { color: var(--text-muted); }
+.message-form-container .form-control:focus {
+    background-color: rgba(0,0,0,0.3);
+    border-color: var(--accent-gold);
+    box-shadow: none;
+}
+.login-prompt { text-align: center; padding: 0.6rem 1.2rem; background-color: rgba(0,0,0,0.2); border-radius: var(--border-radius-round); font-size: 0.9rem; }
+.login-prompt a { font-weight: 500; }
+
+/* --- Pagina Profilo Utente --- */
+
+.profile-user-box {
+    background-color: var(--bg-anthracite);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-main);
+    padding: 1rem 1.5rem;
+    flex-shrink: 0; /* Impedisce al box di rimpicciolirsi */
+}
+
+.profile-header .text-muted {
+    color: var(--accent-gold) !important; /* Cambia il colore in oro */
+    font-weight: 500;                     /* Opzionale: rende il testo un po' più marcato */
+}
+
+.profile-list-item .text-muted {
+    color: #28a745 !important;       /* Un verde brillante che indica "successo" */
+    font-weight: 500;     /* Rende il testo leggermente più spesso e leggibile */
+}
+
+.profile-avatar {
+    width: 60px; height: 60px;
+    background-color: var(--accent-gold);
+    color: var(--bg-deep-black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: var(--font-serif);
+}
+.profile-tabs .nav-tabs { border-bottom: 2px solid var(--border-color-strong); }
+.profile-tabs .nav-link {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: -2px;
+}
+.profile-tabs .nav-link.active {
+    background: transparent;
+    color: var(--accent-gold);
+    border-bottom: 2px solid var(--accent-gold);
+}
+.profile-tabs .tab-content {
+    background-color: var(--bg-anthracite);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-main) var(--border-radius-main);
+    padding: 2rem;
+}
+/* Stile per i titoli dei box nel profilo */
+.profile-box-title {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+/* Rende le liste di aste e commenti scrollabili se il contenuto è troppo lungo */
+.profile-list-scrollable {
+  max-height: calc(90vh - 270px); /* sottrae navbar + header profilo */
+  overflow-y: auto;
+}
+
+/* Stile per evidenziare un'asta vinta */
+.profile-list-item.item-won {
+    border-left: 4px solid #28a745; /* Bordo verde a sinistra */
+}
+
+.profile-list-item p.text-success,
+.profile-list-item span.text-success {
+    color: #28a745 !important; /* Verde per indicare la vittoria */
+}
+/* Alla fine del file: style.css */
+
+/* Forza i box delle aste ad avere la stessa altezza e a non 'sfondare' il contenitore */
+.auctions-half-box {
+    flex: 1; /* Occupa lo spazio disponibile in modo equo */
+    min-height: 0; /* Fondamentale per far funzionare lo scroll interno */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Alla fine del file: style.css */
+
+/* Stile per il singolo commento ridisegnato */
+.profile-list-item.comment-item {
+    display: flex;
+    justify-content: space-between; /* Spinge i dettagli a sx e i bottoni a dx */
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0.5rem; /* Aumenta lo spazio verticale */
+    border-bottom: 1px solid var(--border-color);
+}
+.profile-list-item.comment-item:last-child {
+    border-bottom: none; /* Rimuove il bordo all'ultimo elemento */
+}
+.comment-item .item-details h5 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Rende i bottoni sempre visibili */
+.message-actions.always-visible {
+    opacity: 1;
+    flex-shrink: 0; /* Impedisce ai bottoni di andare a capo */
+}
+
+/* PROFILO UTENTE */
+/* NUOVO: Stili per il layout a tutta altezza non scrollabile */
+.profile-page-container {
+    height: calc(100vh - var(--navbar-height));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+}
+
+.profile-content-row {
+    flex-grow: 1;
+    min-height: 0;
+	
+}
+
+/* NUOVO: Stili per il box del portafoglio separato nell'header */
+.profile-wallet-box {
+    background-color: var(--bg-anthracite);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-main);
+    padding: 0.75rem 1rem;
+    width: 100%; /* Occuperà tutto lo spazio del suo nuovo contenitore */
+}
+
+.profile-header-wallet-container {
+    flex-grow: 1; /* <-- AGGIUNGI: fa sì che questo elemento riempia lo spazio rimanente */
+    /* RIMUOVI o commenta queste righe: */
+    /* flex-basis: 35%;   */
+    /* max-width: 500px;  */
+    /* min-width: 400px;  */
+}
+.profile-wallet-box h5 {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.profile-wallet-values {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.profile-wallet-values .wallet-item small {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.profile-wallet-values .wallet-item .amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: block;
+}
+
+.profile-wallet-values .wallet-item .amount.available {
+    color: var(--accent-gold);
+}
+
+.profile-wallet-values .wallet-item .amount.locked {
+	color: #28a745; /* Verde per disponibile */
+}
+
+.btn-add-funds {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0;
+    margin-left: 0.25rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.btn-add-funds:hover {
+    color: var(--accent-gold);
+}
+
+/* Stile per gli elementi nelle liste del profilo */
+.profile-list-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: rgba(0,0,0,0.2);
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius-small);
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: var(--text-light);
+    transition: background-color 0.3s ease;
+}
+.profile-list-item:hover { background-color: rgba(201, 162, 39, 0.1); }
+
+.profile-list-item .item-image {
+    width: 100px;
+    height: 70px;
+    object-fit: contain; /* Mostra l'intera immagine senza tagliarla */
+    border-radius: var(--border-radius-small);
+    background-color: white; /* Sfondo per le parti vuote */
+    flex-shrink: 0;
+}
+
+.profile-list-item .item-icon {
+    width: 70px; height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--accent-gold);
+    background-color: rgba(0,0,0,0.3);
+    border-radius: var(--border-radius-small);
+    flex-shrink: 0;
+}
+.profile-list-item .item-details { flex-grow: 1; }
+.profile-list-item .item-info { text-align: right; }
+.profile-list-item .item-info small { display: block; color: var(--text-muted); font-size: 0.8rem; }
+.profile-list-item .item-info span { font-weight: 500; }
+.comment-product-link { font-size: 0.8em; font-weight: 400; }
+.comment-author { color: var(--accent-gold); font-weight: 500; }
+
+.message-actions {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    flex-shrink: 0;
+}
+.profile-list-item:hover .message-actions,
+.chat-message:hover .message-actions {
+    opacity: 1;
+}
+.btn-action {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-size: 1rem;
+}
+.btn-action.edit:hover { color: var(--accent-gold); }
+.btn-action.delete:hover { color: var(--danger-red); }
+
+.toast.border-gold {
+    border: 1px solid var(--accent-gold) !important;
+}
+
+.activity-box {
+    background-color: var(--bg-anthracite);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-main);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Buona pratica per contenere gli elementi */
+	min-height: 0;
+}
+
+/* --- 4. NUOVI STILI PER PAGINE DI AUTENTICAZIONE --- */
+
+/* NUOVO: Aggiungi questa regola per centrare la card nella pagina */
+.auth-container {
+    height: calc(100vh - var(--navbar-height)); /* Occupa tutta l'altezza disponibile */
+    display: flex;
+    align-items: center;      /* Centra verticalmente */
+    justify-content: center;  /* Centra orizzontalmente */
+    padding: 2rem;            /* Aggiunge un po' di spazio sui lati */
+	position: relative;
+}
+
+/* MODIFICA: Aggiungi un'ombra per dare profondità */
+.auth-card {
+    background-color: rgba(13, 13, 13, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-main);
+    max-width: 900px; /* Leggermente più grande per un look migliore */
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 10px 40px var(--shadow-color-strong); /* <-- AGGIUNGI QUESTO */
+}
+
+/* MODIFICA: Aggiungi 'height: 100%' per farla estendere verticalmente */
+.auth-card-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%; /* <-- AGGIUNGI QUESTO */
+}
+
+/* NUOVO: Aggiungi queste regole per un tocco di classe */
+.auth-card h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    font-weight: 700;
+}
+
+.auth-card .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.auth-card small {
+    color: var(--text-light) !important; /* Imposta "Non hai un account?" a bianco */
+}
+
+/* Questa regola fa rimanere il link "Registrati" dorato */
+.auth-card small a {
+    color: var(--accent-gold); 
+    font-weight: 500;
+}
+
+.auth-form-control {
+    /* MODIFICA: Sfondo più scuro e solido */
+    background-color: var(--bg-anthracite); 
+    border: 1px solid var(--border-color-strong);
+    color: var(--text-light);
+    border-radius: var(--border-radius-main);
+    padding: 1rem 1rem;
+    transition: all 0.3s ease; /* Aggiunge una transizione fluida */
+}
+
+.auth-form-control:focus {
+    background-color: var(--bg-anthracite); /* Mantiene lo sfondo anche al focus */
+    color: var(--text-light);
+    box-shadow: 0 0 10px var(--shadow-color-light);
+    border-color: var(--accent-gold);
+}
+
+.auth-form-control::placeholder {
+    /* MODIFICA: Colore del testo segnaposto più chiaro e definito */
+    color: var(--text-muted); 
+    opacity: 1; /* Assicura che il colore sia visualizzato correttamente */
+}
+
+
+/* Stile per il contenitore principale delle pagine form */
+
+.form-page-container {
+    max-width: 12200px; /* Aumentato per un layout a 3 colonne */
+    margin: 2rem auto;
+    background-color: var(--bg-anthracite);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-main);
+    border: 1px solid var(--border-color-strong);
+}
+
+.form-page-container h1 {
+    font-family: var(--font-serif);
+    color: var(--accent-gold);
+}
+
+/* Box per la selezione della tipologia */
+.type-selection-box {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: var(--border-radius-small);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Stile per gli input di tipo radio */
+.form-check-input:checked {
+    background-color: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+/* 1. Rendi la card un contenitore di riferimento per i pulsanti */
+.product-card {
+    position: relative; /* Fondamentale per posizionare i pulsanti */
+}
+
+/* 2. Stile per il contenitore dei pulsanti admin */
+.admin-card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 12; /* Deve essere sopra l'overlay dell'asta terminata */
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 3. Stile per i singoli pulsanti (tondi e semi-trasparenti) */
+.admin-action-btn {
+    width: 36px;
+    height: 36px;
+    background-color: rgba(13, 13, 13, 0.7); /* Sfondo scuro semi-trasparente */
+    color: var(--text-light);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* 4. Effetto hover */
+.admin-action-btn.edit:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-deep-black);
+}
+
+.admin-action-btn.delete:hover {
+    background-color: var(--danger-red);
+    color: var(--text-light);
+}
+
+/* Stile per il testo "Base Asta" */
+.auction-price .starting-price-label {
+    color: var(--text-muted)!important; /* Colore grigio */
+    font-weight: 500;
+}
+
+/* Stile per il valore del prezzo di partenza */
+.auction-price .starting-price-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    
+    /* Questo è il contorno oro */
+    -webkit-text-stroke: 1px var(--accent-gold); 
+    
+    /* Questo è il colore di riempimento del testo, che vuoi grigio */
+    color: white;
+}
+
+/* Stile per la visualizzazione della Base Asta nella pagina prodotto */
+.starting-price-display {
+    font-size: 4rem;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-light); /* Colore del testo bianco */
+    white-space: nowrap;
+    margin-bottom: 2rem;
+    
+    /* Rimuovi text-stroke e sostituiscilo con text-shadow */
+    text-shadow:
+      -1px -1px 0 var(--accent-gold),  
+       1px -1px 0 var(--accent-gold),
+      -1px  1px 0 var(--accent-gold),
+       1px  1px 0 var(--accent-gold);
+}
+
+/* Stile per il box info offerente (visibile solo all'admin) */
+.admin-bidder-info {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    padding: 0.75rem 1rem;
+    margin-top: -0.5rem; /* Lo avvicina un po' al prezzo */
+    margin-bottom: 1.5rem;
+    text-align: center; /* Allinea il testo a sinistra per leggibilità */
+    font-size: 0.9rem;
+}
+
+.admin-bidder-info small {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.5rem;
+	text-align: center;
+}
+
+.admin-bidder-info div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    justify-content: center; /* <-- Aggiungi questa riga */
+}
+
+.admin-bidder-info i {
+    color: var(--accent-gold);
+	text-align: center;
+}
+
+/* Stile per i pulsanti di azione pericolosa (es. elimina) */
+.btn-danger-outline {
+    display: inline-block;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid var(--danger-red);
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: var(--border-radius-round);
+    transition: all 0.3s ease;
+    color: var(--danger-red) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-danger-outline:hover {
+    background-color: var(--danger-red);
+    color: var(--text-light) !important;
+    border-color: var(--danger-red);
+}
+
+
+/* --- Stile per le tabelle nelle pagine admin --- */
+.table.table-dark {
+    --bs-table-bg: var(--bg-anthracite);
+    --bs-table-border-color: rgba(255, 255, 255, 0.15);
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.1);
+}
+.table a.product-name-link {
+    color: var(--text-light);
+    font-weight: 500;
+}
+.table a.product-name-link:hover {
+    color: var(--accent-gold);
+}
+
+/* --- Stile per i contenitori dei form (es. Modifica Credito) --- */
+.form-page-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background-color: var(--bg-anthracite);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-main);
+    border: 1px solid var(--border-color-strong);
+}
+.form-page-container h1 {
+    font-family: var(--font-serif);
+    color: var(--accent-gold);
+}
+
+/* --- Stile per i campi dei form di autenticazione e admin --- */
+.auth-form-control {
+    background-color: var(--bg-deep-black);
+    border: 1px solid var(--border-color-strong);
+    color: var(--text-light);
+    border-radius: var(--border-radius-round);
+    padding: 0.9rem 1.5rem;
+    transition: all 0.3s ease;
+}
+.auth-form-control:focus {
+    background-color: var(--bg-deep-black);
+    color: var(--text-light);
+    box-shadow: 0 0 10px var(--shadow-color-light);
+    border-color: var(--accent-gold);
+}
+.auth-form-control::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}

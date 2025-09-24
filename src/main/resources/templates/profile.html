@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Il Tuo Profilo - SNKRS_BID</title>
+
+	<!-- Link ai font e fogli di stile -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Playfair+Display:wght@700&display=swap"
+		rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+	<div th:replace="~{navbar :: navbar}"></div>
+
+	<!-- Contenitore principale a tutta altezza -->
+	<div class="container-fluid profile-page-container p-4" th:if="${user}">
+
+		<!-- Messaggi di Feedback -->
+		<div th:if="${success_message}" class="alert alert-success" th:text="${success_message}"></div>
+		<div th:if="${error_message}" class="alert alert-danger" th:text="${error_message}"></div>
+
+		<!-- ================================================================ -->
+		<!-- Header del Profilo Ridisegnato con Flexbox -->
+		<!-- ================================================================ -->
+		<div class="d-flex align-items-stretch gap-4 mb-4">
+
+			<div class="profile-user-box d-flex align-items-center">
+				<div class="profile-avatar" th:text="${#strings.substring(user.name, 0, 1)}"></div>
+				<div class="ms-3">
+					<h1 class="mb-0" th:text="${user.name} + ' ' + ${user.surname}">Nome Cognome</h1>
+					<p class="mb-0" style="color: grey;" th:text="${user.credentials?.email}">email@utente.com</p>
+				</div>
+				<a th:href="@{/profile/edit}" class="btn btn-gold-outline ms-4 flex-shrink-0">Modifica Profilo</a>
+			</div>
+
+			<div class="profile-header-wallet-container flex-grow-1">
+				<div class="profile-wallet-box h-100">
+					<h5>Portafoglio</h5>
+					<div class="profile-wallet-values">
+						<div class="wallet-item">
+							<small>Totale</small>
+							<span class="amount"
+								th:text="'€ ' + ${#numbers.formatDecimal(user.availableCredit, 1, 'COMMA', 2, 'POINT')}">€
+								0,00</span>
+						</div>
+						<div class="wallet-item">
+							<small>Impegnato</small>
+							<span class="amount locked"
+								th:text="'€ ' + ${#numbers.formatDecimal(lockedCredit, 1, 'COMMA', 2, 'POINT')}">€
+								0,00</span>
+						</div>
+						<div class="wallet-item">
+							<small>Disponibile</small>
+							<span class="amount available"
+								th:text="'€ ' + ${#numbers.formatDecimal(spendableCredit, 1, 'COMMA', 2, 'POINT')}">€
+								0,00</span>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- ================================================================ -->
+		<!-- Layout a 3 Colonne con Altezza Fissa -->
+		<!-- ================================================================ -->
+		<div class="row g-4 profile-content-row">
+
+			<!-- ================================================================ -->
+			<!-- VISTA PER UTENTE NORMALE -->
+			<!-- ================================================================ -->
+			<th:block th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">
+				<!-- Colonna 1: Aste in Corso -->
+				<div class="col-lg-5 d-flex flex-column">
+					<div class="activity-box h-100 d-flex flex-column">
+						<h4 class="profile-box-title">Le Tue Aste in Corso</h4>
+						<div class="profile-list-scrollable">
+							<div th:if="${winningAuctions.isEmpty()}" class="empty-state"><span>Nessuna offerta
+									attiva.</span></div>
+							<a th:each="product : ${winningAuctions}" th:href="@{/product/{id}(id=${product.id})}"
+								class="profile-list-item">
+								<img th:src="${product.imagePath != null} ? @{'/images/products/' + ${product.imagePath}} : 'https://placehold.co/100x70/1A1A1A/C9A227?text=...'"
+									class="item-image" alt="Sneaker">
+								<div class="item-details">
+									<h5 class="mb-1" th:text="${product.name}">Nome Prodotto</h5>
+									<p style="color: grey;" class="mb-1">La tua offerta è la più alta.</p>
+								</div>
+								<div class="mb-1 text-muted item-info">
+									<span class="fw-bold"
+										th:text="'€ ' + ${#numbers.formatDecimal(product.currentBid, 1, 'COMMA', 2, 'POINT')}">€
+										0,00</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!-- Colonna 2: Aste Vinte -->
+				<div class="col-lg-4 d-flex flex-column">
+					<div class="activity-box h-100 d-flex flex-column">
+						<h4 class="profile-box-title">Le Tue Aste Vinte</h4>
+						<div class="profile-list-scrollable">
+							<div th:if="${wonAuctions.isEmpty()}" class="empty-state"><span>Non hai ancora vinto nessuna
+									asta.</span></div>
+							<a th:each="product : ${wonAuctions}" th:href="@{/product/{id}(id=${product.id})}"
+								class="profile-list-item item-won">
+								<img th:src="${product.imagePath != null} ? @{'/images/products/' + ${product.imagePath}} : 'https://placehold.co/100x70/1A1A1A/C9A227?text=...'"
+									class="item-image" alt="Sneaker">
+								<div class="item-details">
+									<h5 class="mb-1" th:text="${product.name}">Nome Prodotto</h5>
+									<p class="mb-1" style="color: grey;">Verrai contattato dall'admin</p>
+								</div>
+								<div class="mb-1 text-muted item-info">
+									<span class="fw-bold text-success"
+										th:text="'€ ' + ${#numbers.formatDecimal(product.currentBid, 1, 'COMMA', 2, 'POINT')}">€
+										0,00</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!-- Colonna 3: Commenti Utente -->
+				<div class="col-lg-3 d-flex flex-column">
+					<div class="activity-box h-100 d-flex flex-column">
+						<h4 class="profile-box-title">I Tuoi Commenti</h4>
+						<div class="profile-list-scrollable">
+							<div th:if="${user.comments.isEmpty()}" class="empty-state"><span>Nessun commento.</span>
+							</div>
+							<div th:unless="${user.comments.isEmpty()}">
+								<div th:each="comment : ${user.comments}" class="profile-list-item comment-item">
+									<div>
+										<h5 class="mb-1" th:text="${comment.title}">Titolo Messaggio</h5>
+										<small><a th:href="@{/product/{id}(id=${comment.product.id})}"
+												th:text="${comment.product.name}" class="comment-product-link">Nome
+												Prodotto</a></small>
+									</div>
+									<div class="message-actions always-visible">
+										<a th:href="@{/comment/{id}/edit(id=${comment.id})}" class="btn-action edit"
+											title="Modifica"><i class="bi bi-pencil-fill"></i></a>
+										<form th:action="@{/comment/{id}/delete(id=${comment.id})}" method="post"
+											class="d-inline" onsubmit="return confirm('Sei sicuro?');">
+											<button type="submit" class="btn-action delete" title="Elimina"><i
+													class="bi bi-trash-fill"></i></button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+
+			<!-- ================================================================ -->
+			<!-- VISTA PER ADMIN -->
+			<!-- ================================================================ -->
+			<th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+				<!-- Colonna 1: Aste Attive -->
+				<div class="col-lg-5 d-flex flex-column">
+					<div class="activity-box h-100 d-flex flex-column">
+						<h4 class="profile-box-title">Panoramica Aste Attive</h4>
+						<div class="profile-list-scrollable">
+							<div th:if="${allActiveAuctions == null or allActiveAuctions.isEmpty()}"
+								class="empty-state"><span>Nessuna asta attiva nel sistema.</span></div>
+							<a th:each="product : ${allActiveAuctions}" th:href="@{/product/{id}(id=${product.id})}"
+								class="profile-list-item">
+								<img th:src="${product.imagePath != null} ? @{'/images/products/' + ${product.imagePath}} : 'https://placehold.co/100x70/1A1A1A/C9A227?text=...'"
+									class="item-image" alt="Sneaker">
+									<div class="item-details">
+									    <h5 class="mb-1" th:text="${product.name}">Nome Prodotto</h5>
+									    <p class="mb-1" style="color: grey" th:if="${product.highestBidder != null}"
+									        th:text="'Offerta più alta di: ' + ${product.highestBidder.credentials.email}">
+									        Miglior offerente</p>
+									    <p class="mb-1" style="color: grey" th:unless="${product.highestBidder != null}">
+									        Nessuna offerta</p>
+									</div>
+									<div class="mb-1 text-muted item-info">
+									    <span class="fw-bold"
+									        th:classappend="${product.highestBidder != null ? 'text-success' : 'text-secondary'}"
+									        th:text="'€ ' + ${#numbers.formatDecimal(product.currentBid, 1, 'COMMA', 2, 'POINT')}">€
+									        0,00</span>
+									</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!-- Colonna 2: Aste Terminate -->
+				<div class="col-lg-4 d-flex flex-column">
+					<div class="activity-box h-100 d-flex flex-column">
+						<h4 class="profile-box-title">Aste Terminate da Gestire</h4>
+						<div class="profile-list-scrollable">
+							<div th:if="${allTerminatedAuctions == null or allTerminatedAuctions.isEmpty()}"
+								class="empty-state"><span>Nessuna asta terminata.</span></div>
+							<div th:each="product : ${allTerminatedAuctions}" class="profile-list-item item-won">
+								<img th:src="${product.imagePath != null} ? @{'/images/products/' + ${product.imagePath}} : 'https://placehold.co/100x70/1A1A1A/C9A227?text=...'"
+									class="item-image" alt="Sneaker">
+								<div class="item-details">
+									<h5 class="mb-1" th:text="${product.name}">Nome Prodotto</h5>
+									<div th:if="${product.highestBidder != null}">
+										<p class="mb-1" style="color: grey"
+											th:text="'Vincitore: ' + ${product.highestBidder.name} + ' ' + ${product.highestBidder.surname}"></p>
+										<div class="mb-1 text-muted fw-bold"
+											th:text="'€ ' + ${#numbers.formatDecimal(product.currentBid, 1, 'COMMA', 2, 'POINT')}">
+											€ 0,00</div>
+										<small class="text-light">Contatta:
+											<a th:href="'mailto:' + ${product.highestBidder.credentials.email}"
+												th:text="${product.highestBidder.credentials.email}"
+												class="admin-contact-link"></a>
+										</small>
+									</div>
+									<p class="mb-1 text-muted" th:unless="${product.highestBidder != null}">Nessun
+										vincitore</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Colonna 3: Tutti i Commenti -->
+				<div class="col-lg-3 d-flex flex-column">
+					<div class="activity-box h-100 d-flex flex-column">
+						<h4 class="profile-box-title">Tutti i Commenti</h4>
+						<div class="profile-list-scrollable">
+							<div th:if="${allComments == null or allComments.isEmpty()}" class="empty-state">
+								<span>Nessun commento nel sistema.</span></div>
+							<div th:each="comment : ${allComments}" class="profile-list-item comment-item">
+								<div class="item-details">
+									<h5 class="mb-1" th:text="${comment.title}">Titolo Messaggio</h5>
+									<small>
+										Di: <strong th:text="${comment.author.name}" class="comment-author">Nome
+											Autore</strong> su
+										<a th:href="@{/product/{id}(id=${comment.product.id})}"
+											th:text="${comment.product.name}" class="comment-product-link">Nome
+											Prodotto</a>
+									</small>
+								</div>
+								<div class="message-actions always-visible">
+									<a th:href="@{/comment/{id}/edit(id=${comment.id})}" class="btn-action edit"
+										title="Modifica"><i class="bi bi-pencil-fill"></i></a>
+									<form th:action="@{/comment/{id}/delete(id=${comment.id})}" method="post"
+										class="d-inline"
+										onsubmit="return confirm('Sei sicuro di voler eliminare questo commento?');">
+										<button type="submit" class="btn-action delete" title="Elimina"><i
+												class="bi bi-trash-fill"></i></button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+
+		</div>
+	</div>
+
+	<!-- Toast per Funzioni non Disponibili -->
+	<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		<div id="unavailableToast" class="toast align-items-center text-bg-dark border-gold" role="alert"
+			aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body"><i class="bi bi-info-circle-fill me-2"></i>Al momento la funzione non è
+					disponibile.</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+					aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Script JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function showUnavailableToast() {
+			const toastEl = document.getElementById('unavailableToast');
+			const toast = new bootstrap.Toast(toastEl);
+			toast.show();
+		}
+	</script>
+</body>
+
+</html>

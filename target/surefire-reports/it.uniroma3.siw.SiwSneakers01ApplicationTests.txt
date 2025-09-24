@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: it.uniroma3.siw.SiwSneakers01ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.457 s -- in it.uniroma3.siw.SiwSneakers01ApplicationTests

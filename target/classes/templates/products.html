@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Aste in Corso - SNKRS_BID</title>
+
+    <!-- Link ai font e fogli di stile aggiornati -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+    <!-- Inclusione della Navbar -->
+    <div th:replace="~{navbar :: navbar}"></div>
+
+    <div class="container my-5">
+        
+		
+        <!-- Header della pagina 
+        <div class="text-center mb-5">
+            <h1 class="page-title">Aste in Corso</h1>
+            <p class="text-light opacity-75">Seleziona la tua sneaker e fai la tua offerta per non perderla.</p>
+        </div>
+		-->
+		
+        
+        <!-- Messaggio se non ci sono prodotti -->
+        <div th:if="${products.isEmpty()}" class="alert alert-dark text-center">
+            Nessuna asta attiva al momento. Torna a trovarci presto!
+        </div>
+
+        <!-- Griglia dei prodotti/aste -->
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:unless="${products.isEmpty()}">
+		    <div class="col" th:each="product : ${products}">
+		        
+		        <!-- NOTA: Abbiamo rimosso il link <a> che avvolgeva tutta la card -->
+		        <div class="product-card h-100"
+		             th:classappend="${product.auctionEndDate != null && #temporals.createNow().isAfter(product.auctionEndDate)} ? 'auction-ended' : ''">
+
+		            <!-- ================================================================ -->
+		            <!-- NUOVO BLOCCO: Pulsanti Azioni Admin -->
+		            <!-- Visibile solo se l'utente è un ADMIN -->
+		            <!-- ================================================================ -->
+		            <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="admin-card-actions">
+		                <!-- Pulsante Modifica -->
+		                <a th:href="@{/admin/editProduct/{id}(id=${product.id})}" class="admin-action-btn edit" title="Modifica Asta">
+		                    <i class="bi bi-pencil-fill"></i>
+		                </a>
+		                <!-- Pulsante Elimina (dentro un form per sicurezza) -->
+		                <form th:action="@{/admin/deleteProduct/{id}(id=${product.id})}" method="post" class="d-inline"
+		                      onsubmit="return confirm('Sei sicuro di voler eliminare questa asta?');">
+		                    <!-- Questo input nascosto dice al controller di tornare qui dopo l'eliminazione -->
+		                    <input type="hidden" name="source" value="catalog">
+		                    <button type="submit" class="admin-action-btn delete" title="Elimina Asta">
+		                        <i class="bi bi-trash-fill"></i>
+		                    </button>
+		                </form>
+		            </div>
+		            <!-- ================================================================ -->
+
+		            <div th:if="${product.auctionEndDate != null && #temporals.createNow().isAfter(product.auctionEndDate)}"
+		                 class="auction-ended-overlay">
+		                <span>Asta Terminata</span>
+		            </div>
+
+		            <div class="product-image-container">
+		                <img th:src="${product.imagePath != null} ? @{'/images/products/' + ${product.imagePath}} : 'https://placehold.co/600x600/0D0D0D/C9A227?text=SNKRS'" 
+		                     class="card-img-top" 
+		                     alt="Immagine Sneaker">
+		            </div>
+		            
+		            <div class="card-body d-flex flex-column">
+		                <h3 class="card-title" th:text="${product.name}">Nome Sneaker</h3>
+		                <div class="auction-details my-3">
+							<div class="auction-price">
+							    <div th:if="${product.currentBid > product.startingPrice}">
+							        <small>Offerta attuale</small>
+							        <span th:classappend="${#authorization.expression('isAuthenticated()') and product.highestBidder?.credentials?.email == #authentication.principal.username} ? 'winning-bid-text'"
+							              th:text="'€ ' + ${#numbers.formatDecimal(product.currentBid, 1, 'COMMA', 2, 'POINT')}">€ 0,00</span>
+							    </div>
+							    
+							    <div th:unless="${product.currentBid > product.startingPrice}">
+							        <small class="starting-price-label">Base Asta</small>
+							        <span class="starting-price-value" th:text="'€ ' + ${#numbers.formatDecimal(product.startingPrice, 1, 'COMMA', 2, 'POINT')}">€ 0,00</span>
+							    </div>
+							</div>
+		                    <div class="auction-timer">
+		                        <small>Scade il</small>
+		                        <span th:text="${#temporals.format(product.auctionEndDate, 'dd/MM/yy')}">Data</span>
+		                    </div>
+		                </div>
+		                <div class="mt-auto">
+		                    <!-- MODIFICA: Questo ora è un link <a> invece di un <div> -->
+		                    <a th:href="@{/product/{id}(id=${product.id})}" class="btn btn-gold w-100">Visualizza Asta</a>
+		                </div>
+		            </div>
+		        </div>
+		        
+		    </div>
+		</div>
+		
+
+    </div>
+	
+
+	
+	<div th:fragment="footer">
+
+	  <!-- Toast per Funzioni non Disponibili -->
+	  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+	      <div id="unavailableToast" class="toast align-items-center text-bg-dark border-gold" role="alert" aria-live="assertive" aria-atomic="true">
+	          <div class="d-flex">
+	              <div class="toast-body">
+	                  <i class="bi bi-info-circle-fill me-2"></i>
+	                  Al momento la funzione non è disponibile.
+	              </div>
+	              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+	          </div>
+	      </div>
+	  </div>
+
+	  <!-- Script JavaScript -->
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	  <script>
+	      function showUnavailableToast() {
+	          const toastEl = document.getElementById('unavailableToast');
+	          const toast = new bootstrap.Toast(toastEl);
+	          toast.show();
+	      }
+	  </script>
+
+	</div>
+</body>
+</html>
+
