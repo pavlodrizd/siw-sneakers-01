@@ -1,4 +1,4 @@
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a86ff070-1a23-4b5f-9b6f-1b88a165a475" /># SIW Sneakers 👟
+# SIW Sneakers 👟
 
 An elegant and modern "dark luxury" web application for high-end sneaker auctions, built with Java Spring Boot. This project provides a complete auction experience where users can bid on exclusive items, manage their wallet, and interact with the community, while administrators have full control over the platform.
 
